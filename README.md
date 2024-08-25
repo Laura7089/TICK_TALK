@@ -76,7 +76,7 @@ The circuit may be subdivided into several sub-sections for easier analysis.
 
 
 
-## 1. Clock Sequencer and Timing Pulse Generator (TPG)
+### 1. Clock Sequencer and Timing Pulse Generator (TPG)
 
 This is at the heart of the design and co-ordinates all of the control signals.
 
@@ -87,7 +87,7 @@ The terminal count of the 74HC161 (RCO) is used to feed a chain of 4, D-type fli
 A power-on reset circuit is formed around U19A and U19B. This resets all shift registers and counters when power is applied to the circuit. There is also a RESET switch S13, which allows a manual reset to be performed.
 
 
-## 2. Instruction Decoder
+### 2. Instruction Decoder
 
 The instruction from the ROM is 16-bits wide and consists od an instruction field IR7:0 and a data field P7:P0.
 
@@ -121,7 +121,7 @@ The two XOR gates U12B and U12C have one input tied high and thus act as simple 
 U11 is a triple 3-input AND. U11A detects if any of the Boolean instructions have been selected (/Y1, /Y2, /Y3) and is used to suppress the carry.
 
 
-## 3. Program Counter.
+### 3. Program Counter.
 
 This is a 16-bit counter and consists of two 74HC595 serial in parallel out (SIPO) shift registers U2 and U3 connected in series. As a bit serial computer, it is reasonable to use shift registers and a half adder to create a Program Counter, especially as it can be loaded from a serial data stream.
 
@@ -135,14 +135,14 @@ The PC increment hardware is based around a half adder, followed by a 2-input mu
 
 The PC half adder is provided by one half of a 4-bit full adder (74HC283 U14). The multiplexer is one half of a 74HC126, quad tristate buffer (U15). The other halves of U14 and U15 are used in the ALU, so not wasted. Instruction group 7 "Jump" is used to swich the PC multiplexer between its +1 increment mode and the jump mode, where it is loaded with data from the B-Register, which has been loaded from the ROM or from and external source.
 
-## 4. Arithmetic and Logic Unit (ALU)
+### 4. Arithmetic and Logic Unit (ALU)
 
 The ALU is based around a full adder, in this case provided by U14 (74HC283) four bit adder that has been partitioned to provide a half adder for the Program Counter and a full adder for the ALU. The full adder can perform subtraction too, by inverting the input from the B-register and adding 1, by way of the Carry input.
 
 The full adder provides sum (XOR) and carry (AND) outputs, which are selected using a 2-input multiplexer, provided by U15 (74HC126). This allows the ZERO, AND, XOR and OR bitwise Boolean logic functions to be selected by way of two instruction control lines I0 and I1. If a Boolean function is selected, the carry propagation from bit to bit is suppressed.
 
 
-## 5. Conditional Branch Logic
+### 5. Conditional Branch Logic
 
 During a conditional branch, the 4-bit instruction field IR3:0 defines the condition as follows by testing the ZERO flag and the MSB of the Accumulator:
 
@@ -165,7 +165,7 @@ The other half of the multiplexer is not used.
 The BCC output is combined in NAND U28 (74HC00) to provide a LONGJUMP control signal if IR3 = 0. If IR3 = 0 the jump address is taken from the 11 lower bits of the instruction word, limiting it to 0 to 2047 in RAM.
 
 
-## 6. Memory Access.
+### 6. Memory Access.
 
 The 32K byte RAM U18 (62256) is read onto the data bus during timeslot T0, and written back to during timeslot T18.
 
@@ -183,14 +183,14 @@ Load Accumulator with data from address IR7:0 and P7:0 thus covering addresses 0
 
 Load the B-Register with the 15 bit constant, IR6:0 and P7:0
 
-## 7. Input/Output  (I/O)
+### 7. Input/Output  (I/O)
 
 TICK is intended to work with SPI peripherals and memory. As such it implements a basic SPI bus with MOSI, MISO, SCLK and /SS signals.
 
 The serial output of the Accumulator U17 (74HC299) is fed through a tristate buffer U24A and sends this MOSI signal to connector X1 pin 2. The MISO signal is received by U22 (74HC595) 8-bit tristate, latchable shift register on X1 pin 3 and can be gated onto the 8-bit data bus. The serial clock X1 pin 4 is just the 8 cycle gated clock burst, GCLK. The slave select /SS or /CE (chip enable) is the inverted output Q4 of the gating counter U8 (74HC161). A maximum SCLK of 1MHz can be achieved from the current 16MHz clock crystal oscillator.
 
 
-## 8. ROM Emulator and SPI Peripherals.
+### 8. ROM Emulator and SPI Peripherals.
 
 Whilst TICK was designed to have firmware coded into a 64K x 16-bit ROM, U1 (AT27C1024) it makes sense to emulate the ROM with a small microcontroller - in this case a low cost clone of the popular Raspberry Pi Pico module.
 
